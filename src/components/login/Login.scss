@@ -1,0 +1,12 @@
+.container {
+    .bot-login {
+        display       : flex;
+        flex-direction: column;
+        text-align    : center;
+    }
+
+    a {
+        text-decoration: none;
+        margin-top     : 3px;
+    }
+}
