@@ -1,7 +1,7 @@
 import axios from "../axios";
 
-const handleLoginApi = (email, password) => {
-    return axios.post('/api/login', { email, password })
+const userLoginService = (data) => {
+    return axios.post('/login', data);
 }
 
 const getAllUsers = (id) => {
@@ -13,7 +13,7 @@ const createUser = (data) => {
 }
 
 export {
-    handleLoginApi,
+    userLoginService,
     getAllUsers, createUser
 }
 
