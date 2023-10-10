@@ -1,39 +1,29 @@
 import Nav from "./components/nav/Nav";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Login from "./components/login/Login";
-import Register from "./components/register/Register";
+import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from "react";
+import _ from "lodash";
+import AppRoutes from "./components/routes/AppRoutes";
 
 function App() {
+  const [account, setAccount] = useState({});
+
+  useEffect(() => {
+    let session = sessionStorage.getItem('account');
+    if (session) {
+      setAccount(JSON.parse(session));
+    }
+  }, [])
+
   return (
     <>
       <Router>
+        <div className="app-header">
+          <Nav />
+        </div>
         <div className="app-container">
-          {/* <Nav /> */}
-          <Switch>
-            <Route path="/news">
-              news
-            </Route>
-            <Route path="/contact">
-              contact
-            </Route>
-            <Route path="/about">
-              about
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/register">
-              <Register />
-            </Route>
-            <Route path="/" exact>
-              home
-            </Route>
-            <Route path="*" exact>
-              404 not found
-            </Route>
-          </Switch>
+          <AppRoutes />
         </div>
         <ToastContainer
           position="top-right"

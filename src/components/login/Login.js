@@ -1,12 +1,13 @@
 import { NavLink, useHistory } from 'react-router-dom'
 import './Login.scss'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { userLoginService } from '../../services/userService';
 
 
 const Login = (props) => {
     let history = useHistory();
+
     const [formLogin, setFormLogin] = useState({
         email: "",
         password: "",
@@ -70,14 +71,33 @@ const Login = (props) => {
                 password,
             };
             const response = await userLoginService(data);
-            console.log("check success", response);
+
             if (response && response.errCode === 0) {
-                history.push('/');
+                let data = {
+                    isAuthenticated: true,
+                    token: 'fake token'
+                }
+                sessionStorage.setItem('account', JSON.stringify(data));
+                window.location.reload();
             } else if (response && response.errCode === 1) {
                 toast.error(response.errMsg);
             }
         }
     }
+
+    const handlePressEnter = (e) => {
+        if (e.code === 'Enter') {
+            handleLogin();
+        }
+    }
+
+    useEffect(() => {
+        let section = sessionStorage.getItem('account');
+        if (section) {
+            history.push('/')
+            window.location.reload();
+        }
+    }, []);
 
     return (
         <div className="container col-sm-5 xm-auto mt-5">
@@ -96,6 +116,7 @@ const Login = (props) => {
                     value={formLogin.password}
                     name="password"
                     onChange={handleInputChange}
+                    onKeyPress={(e) => handlePressEnter(e)}
                     className={objCheckInput.isValidPassword ? 'form-control' : 'form-control is-invalid'}
                 />
                 <label for="floatingPassword">Password</label>

@@ -5,15 +5,34 @@ const userLoginService = (data) => {
 }
 
 const getAllUsers = (id) => {
-    return axios.get(`/api/get-all-users?id=${id}`)
+    return axios.get(`/list/user?id=${id}`)
 }
 
-const createUser = (data) => {
+const fetchAllUserPagination = (page, limit) => {
+    return axios.get(`/list/user?page=${page}&limit=${limit}`)
+}
+
+const createUsers = (data) => {
     return axios.post(`/create/user`, data)
+}
+
+const editUserById = (data) => {
+    return axios.put(`/user/update`, data)
+}
+
+const deleteUserById = (user) => {
+    return axios.delete(`/user/delete`, {
+        data: { id: user.id }
+    });
+}
+
+const fetchGroup = () => {
+    return axios.get(`/list/group`);
 }
 
 export {
     userLoginService,
-    getAllUsers, createUser
+    getAllUsers, createUsers, editUserById, deleteUserById, fetchAllUserPagination,
+    fetchGroup
 }
 

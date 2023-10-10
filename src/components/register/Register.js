@@ -2,7 +2,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import './Register.scss';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { createUser } from '../../services/userService';
+import { createUsers } from '../../services/userService';
 
 const Register = (props) => {
     let history = useHistory();
@@ -93,7 +93,7 @@ const Register = (props) => {
                 username,
                 phone,
             };
-            const response = await createUser(data);
+            const response = await createUsers(data);
             if (response && response.errCode === 0) {
                 history.push('/login');
                 toast.success(response.errMsg);
