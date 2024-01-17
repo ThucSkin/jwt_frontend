@@ -1,12 +1,14 @@
 import { NavLink, useHistory } from 'react-router-dom'
 import './Login.scss'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { userLoginService } from '../../services/userService';
-
+import { UserConText } from '../../context/UserContext';
 
 const Login = (props) => {
     let history = useHistory();
+
+    const { loginContext } = useContext(UserConText);
 
     const [formLogin, setFormLogin] = useState({
         email: "",
@@ -73,12 +75,22 @@ const Login = (props) => {
             const response = await userLoginService(data);
 
             if (response && response.errCode === 0) {
+                let groupWithRoles = response.data.groupWithRoles;
+                let email = response.data.email;
+                let username = response.data.username;
+                let token = response.data.access_token;
+
                 let data = {
                     isAuthenticated: true,
-                    token: 'fake token'
+                    token,
+                    account: { groupWithRoles, email, username }
                 }
-                sessionStorage.setItem('account', JSON.stringify(data));
-                window.location.reload();
+
+                loginContext(data);
+
+                history.push('/users');
+
+                //window.location.reload();
             } else if (response && response.errCode === 1) {
                 toast.error(response.errMsg);
             }
@@ -90,14 +102,6 @@ const Login = (props) => {
             handleLogin();
         }
     }
-
-    useEffect(() => {
-        let section = sessionStorage.getItem('account');
-        if (section) {
-            history.push('/')
-            window.location.reload();
-        }
-    }, []);
 
     return (
         <div className="container col-sm-5 xm-auto mt-5">

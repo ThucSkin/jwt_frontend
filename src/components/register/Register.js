@@ -14,6 +14,7 @@ const Register = (props) => {
         password: "",
         confirmPassword: ""
     });
+
     const defaultValidInput = {
         isValidEmail: true,
         isValidPhone: true,
@@ -21,6 +22,7 @@ const Register = (props) => {
         isValidPassword: true,
         isValidPasswordConfirm: true
     }
+
     const [objCheckInput, setObjCheckInput] = useState(defaultValidInput)
 
     const handleInputChange = (e) => {

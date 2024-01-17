@@ -2,29 +2,43 @@ import Nav from "./components/nav/Nav";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import _ from "lodash";
 import AppRoutes from "./components/routes/AppRoutes";
+import { Rings } from "react-loader-spinner";
+import { UserConText } from "./context/UserContext";
+import './app.css';
 
 function App() {
-  const [account, setAccount] = useState({});
-
-  useEffect(() => {
-    let session = sessionStorage.getItem('account');
-    if (session) {
-      setAccount(JSON.parse(session));
-    }
-  }, [])
+  const { user } = useContext(UserConText);
 
   return (
     <>
       <Router>
-        <div className="app-header">
-          <Nav />
-        </div>
-        <div className="app-container">
-          <AppRoutes />
-        </div>
+        {user && user.isLoading ?
+          <div className="loading-container">
+            <Rings
+              height={100}
+              width={100}
+              color="red"
+              ariaLabel="Loading..."
+            />
+            <div >Loading...</div>
+          </div>
+
+          :
+
+          <>
+            <div className="app-header">
+              <Nav />
+            </div>
+            <div className="app-container">
+              <AppRoutes />
+            </div>
+          </>
+        }
+
+
         <ToastContainer
           position="top-right"
           autoClose={5000}

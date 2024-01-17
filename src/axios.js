@@ -1,36 +1,44 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 require('dotenv').config();
 
+const baseURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_URL,
-    //withCredentials: true
+    baseURL,
+    withCredentials: true,
 });
 
 
 instance.interceptors.response.use(
     (response) => {
         // Xử lý phản hồi thành công và trả về dữ liệu (hoặc response.status nếu không có dữ liệu).
-        return response.data ? response.data : { statusCode: response.status };
+        return response.data;
     },
     (error) => {
-        // Xử lý lỗi và trả về một promise bị reject với thông tin lỗi.
-        let res = {};
-        if (error.response) {
-            res.data = error.response.data;
-            res.status = error.response.status;
-            res.headers = error.response.headers;
-        } else if (error.request) {
-            // Xử lý trường hợp không có phản hồi từ máy chủ.
-            console.log(error.request);
-        } else {
-            // Xử lý lỗi trong quá trình gửi yêu cầu.
-            console.error("Error: ", error.message);
-        }
+        const status = error && error.response && error.response.status || 500;
 
-        return Promise.reject(res);
+        switch (status) {
+            case 401: {
+                toast.error('unauthorized user. Please login!');
+                return error.response.data;
+            }
+            case 403: {
+                toast.error(`You don't have the permission to access this resource`);
+                return error.response.data;
+            }
+            case 400: {
+                return Promise.reject(error);
+            }
+            case 409: {
+                return Promise.reject(error);
+            }
+
+            default: {
+                return Promise.reject(error);
+            }
+        }
     }
 );
-
-
 
 export default instance;

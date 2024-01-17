@@ -30,9 +30,13 @@ const fetchGroup = () => {
     return axios.get(`/list/group`);
 }
 
+const getUserAccount = () => {
+    return axios.get(`/account`)
+}
+
 export {
     userLoginService,
     getAllUsers, createUsers, editUserById, deleteUserById, fetchAllUserPagination,
-    fetchGroup
+    fetchGroup, getUserAccount
 }
 
